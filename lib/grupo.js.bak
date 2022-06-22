@@ -1,0 +1,88 @@
+  const { getBuffer } = require('./myfunc')
+  const Jimp = require('jimp')
+const reSize = async(buffer, ukur1, ukur2) => {
+    return new Promise(async(resolve, reject) => {
+        var baper = await Jimp.read(buffer);
+        var ab = await baper.resize(ukur1, ukur2).getBufferAsync(Jimp.MIME_JPEG)
+        resolve(ab)
+    })
+}
+  const groupResponse = async (venom, anu) => {
+   const metadata = await venom.groupMetadata(anu.id)   
+   for (let participant of anu.participants) {
+   console.log(anu, 'Removendo número fake')
+   if (anu.action == 'add'){
+      if (!anu.participants[0].startsWith(55)){
+      await venom.sendMessage(anu.id, { text: '🤧número fake não são permitidos neste grupo'})  
+      
+
+   					return venom.groupParticipantsUpdate(anu.id, 
+		          	[anu.participants[0]],
+		          	"remove");					
+                        
+					}		
+					}			
+    try{
+       let metadata = await venom.groupMetadata(anu.id)
+       let participants = anu.participants
+       for (let num of participants) {
+         try {
+                    ppuser = await venom.profilePictureUrl(num, 'image')
+                } catch {
+                    ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                }
+
+                
+                try {
+                    ppgroup = await venom.profilePictureUrl(anu.id, 'image')
+                } catch {
+                    ppgroup = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                }
+         if (anu.action == 'add') {
+          var button = [
+             { 
+              buttonId: `menu`, 
+              buttonText: { 
+               displayText: `ꪶꪶᵇᵉᵐ ᵛⁱⁿᵈᵒ ᵃᵒ ᵍʳᵘᵖᵒꪶꪶ` 
+               }, type: 1 
+              }
+             ]
+        venom.sendMessage(
+         anu.id, 
+         { 
+         caption: `*𝘖𝘭𝘢 @${num.split("@")[0]} 𝘴𝘦𝘫𝘢 𝘣𝘦𝘮 𝘷𝘪𝘯𝘥𝘰 𝘢𝘰 𝘨𝘳𝘶𝘱𝘰 ${metadata.subject} *`, 
+         location: { 
+          jpegThumbnail: await reSize(ppuser, 200, 200) 
+         }, 
+         buttons: button, 
+         footer: '𝘉𝘺 𝘝𝘦𝘯𝘰𝘮 ~ 𝘔𝘰𝘥𝘴', mentions: [num] })
+         } 
+        else 
+        if (anu.action == 'remove') {
+          var button = [
+             { 
+              buttonId: `adeus`, 
+              buttonText: { 
+               displayText: `ꪶꪶᴬᵈᵉᵘˢꪶꪶ` 
+               }, type: 1 
+              }
+             ]
+        venom.sendMessage(
+           anu.id, 
+          { 
+           caption: `*𝘰𝘭@${num.split("@")[0]} 𝘴𝘢𝘪𝘶 𝘥𝘰 𝘨𝘳𝘶𝘱𝘰 ${metadata.subject}*`, 
+           location: { jpegThumbnail: await reSize(ppuser, 200, 200) 
+          }, 
+           buttons: button, 
+           footer: '𝘉𝘺 𝘝𝘦𝘯𝘰𝘮 ~ 𝘔𝘰𝘥𝘴', 
+           mentions: [num] 
+             }
+             )
+             }
+            }
+        } catch (err) {
+        console.log(err)
+      }
+    }   
+  }
+module.exports = { groupResponse }  
